@@ -1,39 +1,64 @@
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Tytu³</th>
-            <th>Opis</th>
-            <th>Zrobione</th>
-            <th>Data dodania</th> 
-            <th>Data zrobienia</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+@model IEnumerable<ToDoApp.Models.ToDoItem>
+    @using ToDoApp.Models
+
+    @{
+    ViewData["Title"] = "Zadania";
+    var selectedCategory = ViewBag.WybranaKategoria as string;
+    }
+
+    <h2>Zadania</h2>
+
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link @(string.IsNullOrEmpty(selectedCategory) ? "active" : "")"
+               href="@Url.Action("Index", new { kategoria = "" })">Wszystkie</a>
+        </li>
+        @foreach (KategoriaZadania category in Enum.GetValues(typeof(KategoriaZadania)))
+    {
+        <li class="nav-item">
+            <a class="nav-link @(selectedCategory == category.ToString() ? "active" : "")"
+               href="@Url.Action("Index", new { kategoria = category.ToString() })">
+                @category
+            </a>
+        </li>
+    }
+    </ul>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Dodaj nowe zadanie</a>
+    </p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tytu³</th>
+                <th>Opis</th>
+                <th>Status</th>
+                <th>Kategoria</th>
+                <th>Data dodania</th>
+                <th>Data zakoñczenia</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
         {
-        <tr>
-            <td>@item.Tytul</td>
-            <td>@item.Opis</td>
-            <td>
-                <input type="checkbox" disabled="disabled" @(item.CzyZrobione ? "checked" : "") />
-            </td>
-            <td>@item.DataUtworzenia.ToString("yyyy-MM-dd HH:mm")</td> 
-            <td>
-                @if (item.DataZrobienia != null && item.CzyZrobione)
-                    {
-                @item.DataZrobienia?.ToString("yyyy-MM-dd HH:mm")
-                    }
-                    else
-                    {
-                <em>—</em>
-                    }
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edytuj</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Usuñ</a>
-            </td>
-        </tr>
+            <tr>
+                <td>@item.Tytul</td>
+                <td>@item.Opis</td>
+                <td>@item.Status</td>
+                <td>@item.Kategoria</td>
+                <td>@item.DataUtworzenia.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    @(item.Status == StatusZadania.Zakonczone && item.DataZrobienia.HasValue
+                        ? item.DataZrobienia.Value.ToString("yyyy-MM-dd HH:mm")
+                        : "—")
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edytuj</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Usuñ</a>
+                </td>
+            </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>

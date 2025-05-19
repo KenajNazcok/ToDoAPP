@@ -12,10 +12,30 @@ namespace ToDoApp.Models
 
         public string Opis { get; set; } = string.Empty;
 
-        public bool CzyZrobione { get; set; }
-
         public DateTime DataUtworzenia { get; set; } = DateTime.Now;
 
         public DateTime? DataZrobienia { get; set; }
+
+        [Required]
+        public StatusZadania Status { get; set; }
+
+        [Required]
+        public KategoriaZadania Kategoria { get; set; }
+    }
+
+    public enum StatusZadania
+    {
+        Nowe,
+        WTrakcie,
+        Zakonczone,
+        Zawieszone
+    }
+
+    public enum KategoriaZadania
+    {
+        Praca,
+        Nauka,
+        Dom,
+        Inne
     }
 }
