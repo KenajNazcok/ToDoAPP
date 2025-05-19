@@ -1,35 +1,29 @@
 @model ToDoApp.Models.ToDoItem
 
-@{
-    ViewData["Title"] = "Dodaj nowe zadanie";
-}
-
-<h2>@ViewData["Title"]</h2>
+<h2>Dodaj nowe zadanie</h2>
 
 <form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <div class="mb-3">
-        <label asp-for="Tytul" class="form-label"></label>
+    <div class="form-group">
+        <label asp-for="Tytul"></label>
         <input asp-for="Tytul" class="form-control" />
         <span asp-validation-for="Tytul" class="text-danger"></span>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Opis" class="form-label"></label>
+    <div class="form-group">
+        <label asp-for="Opis"></label>
         <textarea asp-for="Opis" class="form-control"></textarea>
-        <span asp-validation-for="Opis" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <select asp-for="Status" asp-items="@(ViewData["StatusList"] as IEnumerable<SelectListItem>)" class="form-control"></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="Kategoria"></label>
+        <select asp-for="Kategoria" asp-items="@(ViewData["KategoriaList"] as IEnumerable<SelectListItem>)" class="form-control"></select>
     </div>
 
-    <div class="form-check mb-3">
-        <input asp-for="CzyZrobione" class="form-check-input" />
-        <label asp-for="CzyZrobione" class="form-check-label"></label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Dodaj</button>
-    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+    <button type="submit" class="btn btn-primary mt-2">Dodaj</button>
 </form>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
